@@ -44,7 +44,7 @@ Prisma здесь в «классическом» стиле (версия 6): `
 
 ## Как запустить
 
-Нужны **Node.js 20+** и **Docker Desktop** (или Docker Engine + Compose). PostgreSQL в этом проекте поднимается через `docker-compose.yml`, не «голый» Postgres на хосте.
+Нужны **Node.js 20+** и база PostgreSQL. Базу можно поднять через **Docker** (`npm run db:up`) или взять бесплатный проект на [Neon](https://neon.tech) и вставить `DATABASE_URL` в `.env`.
 
 1. Склонируй репозиторий и зайди в папку проекта.
 
@@ -60,13 +60,17 @@ cp .env.example .env
 npm install
 ```
 
-4. Подними PostgreSQL:
+4. Подними PostgreSQL одним из двух способов.
+
+**Вариант A — Docker** (если Docker Desktop установлен):
 
 ```bash
 npm run db:up
 ```
 
-Подожди несколько секунд, пока контейнер станет healthy / `running`. Порт **5432** должен быть свободен.
+Подожди несколько секунд, пока контейнер станет `running`. Порт **5432** должен быть свободен.
+
+**Вариант B — без Docker, бесплатный [Neon](https://neon.tech):** зайди на https://neon.tech, создай проект, скопируй connection string и в `.env` замени `DATABASE_URL` на эту строку (обычно с `?sslmode=require`). Docker для этого варианта не нужен.
 
 5. Примени миграции (создаст таблицу `User`):
 
@@ -143,8 +147,8 @@ curl http://localhost:3000/health
 ## Если что-то не стартует
 
 - **Порт 5432 занят** — останови другой Postgres или смени порт в `docker-compose.yml` и в `DATABASE_URL`.
-- **Docker не установлен** — без него база из этого репозитория не поднимется. Поставь Docker Desktop и повтори `npm run db:up`.
-- **`P1001: Can't reach database`** — контейнер ещё не готов, подожди и снова `npm run db:migrate`.
+- **Docker не установлен** — используй бесплатный [Neon](https://neon.tech): в `.env` подставь их `DATABASE_URL` (с `sslmode=require`) и запусти `npm run db:migrate`. Либо поставь Docker Desktop и `npm run db:up`.
+- **`P1001: Can't reach database`** — Docker-контейнер ещё не готов, или Neon-строка без `sslmode=require` / опечатка. Проверь `.env` и повтори `npm run db:migrate`.
 - **Нет `.env`** — `tsx --env-file=.env` не найдёт файл; скопируй `.env.example`.
 
 ## Источники

@@ -6,15 +6,15 @@
 
 ## Чеклист запуска
 
-- [ ] Установлены Node.js 20+ и Docker Desktop (или Docker Engine + Compose)
+- [ ] Установлен Node.js 20+
 - [ ] В корне проекта: `cp .env.example .env`
 - [ ] `npm install` завершился без ошибки
-- [ ] `npm run db:up` — контейнер Postgres запущен (`docker compose ps` показывает порт 5432)
+- [ ] База есть: либо `npm run db:up` (Docker, порт 5432), либо в `.env` стоит `DATABASE_URL` из бесплатного [Neon](https://neon.tech) (`sslmode=require`)
 - [ ] `npm run db:migrate` применил миграцию `init` (таблица `User`)
 - [ ] `npm run dev` печатает, что сервер слушает порт 3000
 - [ ] `curl http://localhost:3000/health` отвечает `{"ok":true}`
 
-Если Docker недоступен, дальше CRUD не заработает: Prisma не к чему подключиться. Не пропускай этот шаг.
+Без Docker и без Neon Prisma не к чему подключиться — `db:migrate` упадёт. Выбери один вариант и не пропускай его.
 
 ## Чеклист User CRUD
 
